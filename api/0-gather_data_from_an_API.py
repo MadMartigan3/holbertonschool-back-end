@@ -11,10 +11,10 @@ if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
     EMPLOYEE_ID = sys.argv[1]
 
-    TODOS = requests.get("{}/users/{}/todos".format(url, EMPLOYEE_ID),
-                         params={"userId": EMPLOYEE_ID})
+    EMPLOYEE_TODOS = requests.get("{}/users/{}/todos".format(url, EMPLOYEE_ID),
+                         params={"_expend": "user"})
 
-    data = TODOS.json()
+    data = EMPLOYEE_TODOS.json()
 
     EMPLOYEE_NAME = data[0].get("name")
     TOTAL_NUMBER_OF_TASKS = len(data)
