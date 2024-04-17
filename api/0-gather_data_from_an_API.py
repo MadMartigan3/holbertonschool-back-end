@@ -22,7 +22,7 @@ if __name__ == "__main__":
     TASK_TITLE = []
 
     for task in data:
-        if task.get("completed"):
+        if task.get("completed") is True:
             NUMBER_OF_DONE_TASKS += 1
             TASK_TITLE.append(task.get("title"))
 
