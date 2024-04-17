@@ -1,24 +1,28 @@
 #!/usr/bin/python3
-"""extend your Python script to export data in the CSV format."""
-
+""" export data in the CSV format."""
 import csv
 import requests
 import sys
 
-
 if __name__ == "__main__":
-    user_id = sys.argv[1]
+    if len(sys.argv) < 2:
+        print(f"missing employee id as argument")
+        sys.exit(1)
 
-    url = "https://jsonplaceholder.typicode.com/"
+    URL = "https://jsonplaceholder.typicode.com"
+    EMPLOYEE_ID = sys.argv[1]
 
-    user = requests.get(url + "users/{}".format(user_id)).json()
+    EMPLOYEE_TODOS = requests.get(f"{URL}/users/{EMPLOYEE_ID}/todos",
+                                  params={"_expand": "user"})
+    data = EMPLOYEE_TODOS.json()
 
-    username = user.get("username")
+    EMPLOYEE_NAME = data[0]["user"]["username"]
+    fileName = f"{EMPLOYEE_ID}.csv"
 
-    todos = requests.get(url + "todos", params={"userId": user_id}).json()
-
-    with open("{}.csv".format(user_id), "w", newline="") as csvfile:
-        writer = csv.writer(csvfile, quoting=csv.QUOTE_ALL)
-        [writer.writerow(
-            [user_id, username, t.get("completed"), t.get("title")]
-         ) for t in todos]
+    with open(fileName, "w", newline="") as file:
+        writer = csv.writer(file, quoting=csv.QUOTE_NONNUMERIC)
+        for task in data:
+            writer.writerow(
+                [EMPLOYEE_ID, EMPLOYEE_NAME, str(task["completed"]),
+                 task["title"]]
+            )
