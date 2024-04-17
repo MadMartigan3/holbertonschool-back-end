@@ -1,33 +1,30 @@
 #!/usr/bin/python3
-"""Write a Python script that, using this REST API, for a given employee ID,
-returns information about his/her TODO list progress."""
-
+"""using this REST API, for a given employee ID"""
+import json
 import requests
 import sys
-import json
 
 if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print(f"missing employee id as argument")
+        sys.exit(1)
 
-    url = "https://jsonplaceholder.typicode.com/"
+    URL = "https://jsonplaceholder.typicode.com"
     EMPLOYEE_ID = sys.argv[1]
 
-    EMPLOYEE_TODOS = requests.get("{}/users/{}/todos".format(url, EMPLOYEE_ID),
-                         params={"_expend": "user"})
-
+    EMPLOYEE_TODOS = requests.get(f"{URL}/users/{EMPLOYEE_ID}/todos",
+                                  params={"_expand": "user"})
     data = EMPLOYEE_TODOS.json()
 
-    EMPLOYEE_NAME = data[0].get("name")
+    EMPLOYEE_NAME = data[0]["user"]["name"]
     TOTAL_NUMBER_OF_TASKS = len(data)
     NUMBER_OF_DONE_TASKS = 0
     TASK_TITLE = []
-
     for task in data:
-        if task.get("completed") is True:
+        if task["completed"]:
             NUMBER_OF_DONE_TASKS += 1
-            TASK_TITLE.append(task.get("title"))
-
-    print("Employee {} is done with tasks({}/{}):".format(
-        EMPLOYEE_NAME, NUMBER_OF_DONE_TASKS, TOTAL_NUMBER_OF_TASKS))
-
+            TASK_TITLE.append(task["title"])
+    print(f"Employee {EMPLOYEE_NAME} is done with tasks"
+          f"({NUMBER_OF_DONE_TASKS}/{TOTAL_NUMBER_OF_TASKS}):")
     for title in TASK_TITLE:
-        print("\t {}".format(title))
+        print("\t ", title)
