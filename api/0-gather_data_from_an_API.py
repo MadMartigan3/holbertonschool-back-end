@@ -7,7 +7,7 @@ import sys
 import json
 
 if __name__ == "__main__":
-    
+
     url = "https://jsonplaceholder.typicode.com/"
     EMPLOYEE_ID = sys.argv[1]
 
