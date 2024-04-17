@@ -7,9 +7,9 @@ import sys
 import json
 
 if __name__ == "__main__":
-    EMPLOYEE_ID = sys.argv[1]
-
+    
     url = "https://jsonplaceholder.typicode.com/"
+    EMPLOYEE_ID = sys.argv[1]
 
     TODOS = requests.get("{}/users/{}/todos".format(url, EMPLOYEE_ID),
                          params={"userId": EMPLOYEE_ID})
